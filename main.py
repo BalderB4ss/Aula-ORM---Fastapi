@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, Request, Form
 
 # Inicializar o fastapi
 app = FastAPI(title="Gestão escolar")
