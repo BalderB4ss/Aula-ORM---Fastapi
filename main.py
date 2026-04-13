@@ -1,23 +1,43 @@
 from fastapi import FastAPI, Depends, HTTPException, Request, Form
+from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
+from database import get_db
+from models import Curso, Aluno
+
+# pip install jinja2 python-multpart
 
 # Inicializar o fastapi
 app = FastAPI(title="Gestão escolar")
+
+templates = Jinja2Templates(directory="templates")
 
 # Rodar api
 # No terminal: python -m uvicorn main:app --reload
 
 # Rota
 # Métodos http: GET, POST, PUT, DELETE
-@app.get("/")
-def tela_inicial():
-    return {"mensagem":"Bem-vindo ao sistema de gestão escolar"}
 
-# Banco de dados
-alunos = {
-    1:{"nome": "Gabriel", "idade": 34},
-    2:{"nome": "Cassio", "idade": 34},
-    3:{"nome": "Emilly", "idade": 34},
-}
-@app.get("/alunos")
-def listar_alunos():
-    return {"alunos":alunos}
+app.get("/cursos/cadastro")
+def exibir_cadastro(request:Request):
+    return templates.TemplateResponse(
+        request,
+        "cadastrar_curso.html",  
+        {"resquest": request}
+    )
+
+# Rota para cadastrar um curso
+@app.post("/cursos")
+def criar_curso(
+    nome: str= Form(...),
+    carga_horaria: int = Form(...),
+    descricao: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    # cadastrar o curso no banco
+    novo_curso = Curso(nome = nome, carga_horaria = carga_horaria, descricao = descricao)
+    db.add(novo_curso)
+    db.commit()
+
+    return RedirectResponse(url="/", status_code=303)
+
