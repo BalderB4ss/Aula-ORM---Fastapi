@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cursos</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    margin: 0;
+}
+
+/* ===== TOPO ===== */
+.topo {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.topo-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.logo-area h1 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.logo-area span {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.acoes .btn {
+    background: white;
+    color: #4f46e5;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.acoes .btn:hover {
+    background: #e0e7ff;
+}
+
+/* ===== CONTEÚDO ===== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.card h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #1e293b;
+}
+
+.descricao {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 15px;
+}
+
+.carga {
+    font-size: 13px;
+    color: #4f46e5;
+    font-weight: bold;
+}
+
+.empty {
+    text-align: center;
+    margin-top: 40px;
+    color: #64748b;
+}
+
+/* RESPONSIVO */
+@media (max-width: 600px) {
+    .topo-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .acoes {
+        width: 100%;
+    }
+
+    .acoes .btn {
+        display: block;
+        text-align: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOPO -->
+<header class="topo">
+    <div class="topo-container">
+        <div class="logo-area">
+            <h1>Gestão Escolar</h1>
+            <span>Painel de cursos</span>
+        </div>
+
+        <div class="acoes">
+            <a href="/cursos/cadastro" class="btn">+ Novo Curso</a>
+        </div>
+    </div>
+</header>
+
+<!-- CONTEÚDO -->
+<div class="container">
+
+    <div class="grid">
+        {% for curso in cursos %}
+        <div class="card">
+            <div>
+                <h2>{{ curso.nome }}</h2>
+                <p class="descricao">{{ curso.descricao }}</p>
+            </div>
+            <div class="carga">
+                {{ curso.carga_horaria }} horas
+            </div>
+            <form action="/cursos/{{curso.id}}/deletar", method="post">
+                <button type="submit">Excluir</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if cursos|length == 0 %}
+        <div class="empty">Nenhum curso cadastrado.</div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
